@@ -23,16 +23,13 @@
     ],
     "modmenu": [
       "de.dafuqs.globalspawn.config.ModMenuConfig"
-    ],
-    "preLaunch": [
-      "com.llamalad7.mixinextras.MixinExtrasBootstrap::init"
     ]
   },
   "mixins": [
     "globalspawn.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.20.0",
+    "minecraft": ">=1.20.1",
     "fabricloader": "*",
     "fabric": "*",
     "cloth-config2": "*"
