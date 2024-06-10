@@ -11,11 +11,13 @@ public class GlobalSpawnPoint {
 	private final RegistryKey<World> dimension;
 	private final BlockPos position;
 	private final float angle;
+	private final int spread;
 	
-	public GlobalSpawnPoint(RegistryKey<World> spawnPointDimension, BlockPos position, float angle) {
+	public GlobalSpawnPoint(RegistryKey<World> spawnPointDimension, BlockPos position, float angle, int spread) {
 		this.dimension = spawnPointDimension;
 		this.position = position;
 		this.angle = angle;
+		this.spread = spread;
 	}
 	
 	public NbtCompound getSpawnNbtCompound(@Nullable NbtCompound nbtCompound) {
@@ -45,6 +47,10 @@ public class GlobalSpawnPoint {
 	
 	public float getAngle() {
 		return angle;
+	}
+	
+	public int getSpread() {
+		return spread;
 	}
 	
 }

@@ -1,15 +1,15 @@
 package de.dafuqs.globalspawn.command;
 
-import de.dafuqs.globalspawn.GlobalSpawnCommon;
-import de.dafuqs.globalspawn.GlobalSpawnManager;
-import de.dafuqs.globalspawn.GlobalSpawnPoint;
+import com.mojang.brigadier.arguments.*;
+import de.dafuqs.globalspawn.*;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.command.argument.*;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 public class InitialSpawnCommand {
@@ -19,11 +19,21 @@ public class InitialSpawnCommand {
 				.requires((source) -> source.hasPermissionLevel(GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.commandPermissionLevel))
 				.executes((commandContext) -> InitialSpawnCommand.executeQuery(commandContext.getSource()))
 				.then(CommandManager.literal("query")
-						.executes((commandContext) -> InitialSpawnCommand.executeQuery(commandContext.getSource())))
-				.then(CommandManager.literal("unset")
-						.executes((commandContext) -> InitialSpawnCommand.executeUnset(commandContext.getSource())))
+						.executes((context) -> InitialSpawnCommand.executeQuery(context.getSource())))
+				.then(CommandManager.literal("remove")
+						.executes((context) -> InitialSpawnCommand.executeRemove(context.getSource())))
 				.then(CommandManager.literal("set")
-						.executes((commandContext) -> InitialSpawnCommand.executeSet(commandContext.getSource(), commandContext.getSource().getWorld(), BlockPos.ofFloored((commandContext.getSource()).getPosition()), commandContext.getSource().getRotation().y)))
+						.then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+								.then(CommandManager.argument("position", BlockPosArgumentType.blockPos())
+										.then(CommandManager.argument("angle", AngleArgumentType.angle())
+												.then(CommandManager.argument("spread", IntegerArgumentType.integer())
+														.executes((context) -> InitialSpawnCommand.executeSet(
+																context.getSource(),
+																DimensionArgumentType.getDimensionArgument(context, "dimension"),
+																BlockPosArgumentType.getBlockPos(context, "position"),
+																AngleArgumentType.getAngle(context, "angle"),
+																IntegerArgumentType.getInteger(context, "spread"))
+														))))))
 		));
 	}
 	
@@ -41,14 +51,14 @@ public class InitialSpawnCommand {
 		return 1;
 	}
 	
-	static int executeSet(ServerCommandSource source, ServerWorld serverWorld, BlockPos blockPos, float angle) {
-		GlobalSpawnPoint initialSpawnPoint = new GlobalSpawnPoint(serverWorld.getRegistryKey(), blockPos, angle);
+	static int executeSet(ServerCommandSource source, ServerWorld serverWorld, BlockPos blockPos, float angle, int spread) {
+		GlobalSpawnPoint initialSpawnPoint = new GlobalSpawnPoint(serverWorld.getRegistryKey(), blockPos, angle, spread);
 		GlobalSpawnManager.setInitialSpawnPoint(initialSpawnPoint);
 		source.sendFeedback(() -> Text.translatable("commands.globalspawn.initialspawnpoint.set_to", serverWorld.getRegistryKey().getValue().toString(), blockPos.getX(), blockPos.getY(), blockPos.getZ(), angle), true);
 		return 1;
 	}
 	
-	static int executeUnset(ServerCommandSource source) {
+	static int executeRemove(ServerCommandSource source) {
 		GlobalSpawnManager.unsetInitialSpawnPoint();
 		source.sendFeedback(() -> Text.translatable("commands.globalspawn.initialspawnpoint.unset"), true);
 		return 1;

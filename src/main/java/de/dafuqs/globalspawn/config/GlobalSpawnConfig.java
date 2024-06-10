@@ -15,6 +15,7 @@ public class GlobalSpawnConfig implements ConfigData {
 	public int globalRespawnPositionY = 80;
 	public int globalRespawnPositionZ = 50;
 	public float globalRespawnAngle = 0;
+	public int globalRespawnPositionSpread = 0;
 	
 	public boolean initialSpawnPointActive = false;
 	public String initialSpawnPointDimension = "minecraft:overworld";
@@ -22,5 +23,6 @@ public class GlobalSpawnConfig implements ConfigData {
 	public int initialSpawnPositionY = 80;
 	public int initialSpawnPositionZ = 50;
 	public float initialSpawnAngle = 0;
+	public int initialSpawnPositionSpread = 0;
 	
 }
