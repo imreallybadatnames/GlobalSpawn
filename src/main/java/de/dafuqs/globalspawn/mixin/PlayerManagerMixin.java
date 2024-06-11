@@ -27,7 +27,7 @@ public abstract class PlayerManagerMixin {
 		if (GlobalSpawnManager.isInitialSpawnPointActive(this.server) && GlobalSpawnMixinHandler.isNewPlayer(player)) {
 			nbt = GlobalSpawnMixinHandler.modifySpawnRegistryPositionAndDimensionForNewPlayer(this.server, nbt);
 			player.readNbt(nbt);
-		} else if (GlobalSpawnManager.isGlobalSpawnPointActive(this.server) && GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.spawnAtGlobalSpawnOnEveryJoin) {
+		} else if (GlobalSpawnManager.isGlobalSpawnPointActive(this.server) && GlobalSpawn.GLOBAL_SPAWN_CONFIG.spawnAtGlobalSpawnOnEveryJoin) {
 			nbt = GlobalSpawnMixinHandler.modifySpawnRegistryPositionAndDimensionForExistingPlayer(this.server, nbt);
 			player.readNbt(nbt);
 		}

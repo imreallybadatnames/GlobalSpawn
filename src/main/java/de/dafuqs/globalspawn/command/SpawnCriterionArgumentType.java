@@ -10,9 +10,15 @@ import net.minecraft.text.*;
 import net.minecraft.util.*;
 
 import java.util.*;
+import java.util.function.*;
 
 public class SpawnCriterionArgumentType implements ArgumentType<GlobalSpawnPoint.SpawnCriterion> {
-	private static final Collection<String> EXAMPLES = Arrays.stream(GlobalSpawnPoint.SpawnCriterion.values()).map(Enum::toString).toList();
+	private static final Collection<String> EXAMPLES = Arrays.stream(GlobalSpawnPoint.SpawnCriterion.values()).map(new Function<GlobalSpawnPoint.SpawnCriterion, String>() {
+		@Override
+		public String apply(GlobalSpawnPoint.SpawnCriterion criterion) {
+			return criterion.toString().toLowerCase(Locale.ROOT);
+		}
+	}).toList();
 	public static final SimpleCommandExceptionType INVALID_EXCEPTION = new SimpleCommandExceptionType(Text.translatable("argument.spawn_criterion.invalid"));
 
 	public SpawnCriterionArgumentType() {
@@ -30,7 +36,7 @@ public class SpawnCriterionArgumentType implements ArgumentType<GlobalSpawnPoint
 		String string = reader.readUnquotedString();
 
 		try {
-			return GlobalSpawnPoint.SpawnCriterion.valueOf(string);
+			return GlobalSpawnPoint.SpawnCriterion.valueOf(string.toUpperCase(Locale.ROOT));
 		} catch (InvalidIdentifierException var4) {
 			throw INVALID_EXCEPTION.createWithContext(reader);
 		}

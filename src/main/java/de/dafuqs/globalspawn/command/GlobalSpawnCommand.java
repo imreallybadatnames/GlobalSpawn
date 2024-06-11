@@ -15,19 +15,26 @@ public class GlobalSpawnCommand {
 
 	public static void register() {
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(CommandManager.literal("globalspawnpoint")
-				.requires((source) -> source.hasPermissionLevel(GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.commandPermissionLevel))
-				.executes((commandContext) -> GlobalSpawnCommand.executeQuery(commandContext.getSource()))
+				.requires((source) -> source.hasPermissionLevel(GlobalSpawn.GLOBAL_SPAWN_CONFIG.commandPermissionLevel))
+				.executes((commandContext) -> executeQuery(commandContext.getSource()))
 				.then(CommandManager.literal("query")
-						.executes((context) -> GlobalSpawnCommand.executeQuery(context.getSource())))
+						.executes((context) -> executeQuery(context.getSource())))
 				.then(CommandManager.literal("remove")
-						.executes((context) -> GlobalSpawnCommand.executeRemove(context.getSource())))
+						.executes((context) -> executeRemove(context.getSource())))
 				.then(CommandManager.literal("set")
+						.executes((context) -> executeSet(
+								context.getSource(),
+								context.getSource().getWorld(),
+								BlockPos.ofFloored(context.getSource().getPosition()),
+								0,
+								GlobalSpawnPoint.SpawnCriterion.SAFE_SKY_ACCESS_NOT_REQUIRED,
+								0))
 						.then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
 								.then(CommandManager.argument("position", BlockPosArgumentType.blockPos())
 										.then(CommandManager.argument("spread", IntegerArgumentType.integer())
 												.then(CommandManager.argument("criterion", SpawnCriterionArgumentType.criterion())
 														.then(CommandManager.argument("angle", AngleArgumentType.angle())
-																.executes((context) -> InitialSpawnCommand.executeSet(
+																.executes((context) -> executeSet(
 																		context.getSource(),
 																		DimensionArgumentType.getDimensionArgument(context, "dimension"),
 																		BlockPosArgumentType.getBlockPos(context, "position"),

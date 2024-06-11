@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "de.dafuqs.globalspawn.GlobalSpawnCommon"
+      "de.dafuqs.globalspawn.GlobalSpawn"
     ],
     "modmenu": [
       "de.dafuqs.globalspawn.config.ModMenuConfig"

@@ -15,13 +15,20 @@ public class InitialSpawnCommand {
 
 	public static void register() {
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(CommandManager.literal("initialspawnpoint")
-				.requires((source) -> source.hasPermissionLevel(GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.commandPermissionLevel))
-				.executes((commandContext) -> InitialSpawnCommand.executeQuery(commandContext.getSource()))
+				.requires((source) -> source.hasPermissionLevel(GlobalSpawn.GLOBAL_SPAWN_CONFIG.commandPermissionLevel))
+				.executes((commandContext) -> executeQuery(commandContext.getSource()))
 				.then(CommandManager.literal("query")
-						.executes((context) -> InitialSpawnCommand.executeQuery(context.getSource())))
+						.executes((context) -> executeQuery(context.getSource())))
 				.then(CommandManager.literal("remove")
-						.executes((context) -> InitialSpawnCommand.executeRemove(context.getSource())))
+						.executes((context) -> executeRemove(context.getSource())))
 				.then(CommandManager.literal("set")
+						.executes((context) -> executeSet(
+								context.getSource(),
+								context.getSource().getWorld(),
+								BlockPos.ofFloored(context.getSource().getPosition()),
+								0,
+								GlobalSpawnPoint.SpawnCriterion.SAFE_SKY_ACCESS_NOT_REQUIRED,
+								0))
 						.then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
 								.then(CommandManager.argument("position", BlockPosArgumentType.blockPos())
 										.then(CommandManager.argument("spread", IntegerArgumentType.integer())

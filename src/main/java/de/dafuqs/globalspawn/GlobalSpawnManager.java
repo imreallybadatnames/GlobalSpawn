@@ -7,6 +7,8 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.*;
 
+import java.util.*;
+
 public class GlobalSpawnManager {
 	
 	private static @Nullable GlobalSpawnPoint globalRespawnPoint;
@@ -14,27 +16,27 @@ public class GlobalSpawnManager {
 	
 	// GENERAL
 	public static void initialize(MinecraftServer server) {
-		boolean shouldRespawnPointBeActive = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPointActive;
-		RegistryKey<World> globalSpawnWorldKey = RegistryKey.of(RegistryKeys.WORLD, new Identifier(GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnDimension));
+		boolean shouldRespawnPointBeActive = GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPointActive;
+		RegistryKey<World> globalSpawnWorldKey = RegistryKey.of(RegistryKeys.WORLD, new Identifier(GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnDimension));
 		if (shouldRespawnPointBeActive && existsWorld(server, globalSpawnWorldKey)) {
-			int x = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPositionX;
-			int y = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPositionY;
-			int z = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPositionZ;
-			int spread = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPositionSpread;
-			GlobalSpawnPoint.SpawnCriterion criterion = GlobalSpawnPoint.SpawnCriterion.valueOf(GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnCriterion);
-			float angle = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnAngle;
+			int x = GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPositionX;
+			int y = GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPositionY;
+			int z = GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPositionZ;
+			int spread = GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPositionSpread;
+			GlobalSpawnPoint.SpawnCriterion criterion = GlobalSpawnPoint.SpawnCriterion.valueOf(GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnCriterion.toUpperCase(Locale.ROOT));
+			float angle = GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnAngle;
 			globalRespawnPoint = new GlobalSpawnPoint(globalSpawnWorldKey, new BlockPos(x, y, z), spread, criterion, angle);
 		}
-		
-		boolean shouldInitialSpawnPointBeActive = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPointActive;
-		RegistryKey<World> initialSpawnWorldKey = RegistryKey.of(RegistryKeys.WORLD, new Identifier(GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPointDimension));
+
+		boolean shouldInitialSpawnPointBeActive = GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPointActive;
+		RegistryKey<World> initialSpawnWorldKey = RegistryKey.of(RegistryKeys.WORLD, new Identifier(GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPointDimension));
 		if (shouldInitialSpawnPointBeActive && existsWorld(server, initialSpawnWorldKey)) {
-			int x = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPositionX;
-			int y = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPositionY;
-			int z = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPositionZ;
-			int spread = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPositionSpread;
-			GlobalSpawnPoint.SpawnCriterion criterion = GlobalSpawnPoint.SpawnCriterion.valueOf(GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnCriterion);
-			float angle = GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnAngle;
+			int x = GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPositionX;
+			int y = GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPositionY;
+			int z = GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPositionZ;
+			int spread = GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPositionSpread;
+			GlobalSpawnPoint.SpawnCriterion criterion = GlobalSpawnPoint.SpawnCriterion.valueOf(GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnCriterion.toUpperCase(Locale.ROOT));
+			float angle = GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnAngle;
 			initialSpawnPoint = new GlobalSpawnPoint(initialSpawnWorldKey, new BlockPos(x, y, z), spread, criterion, angle);
 		}
 	}
@@ -46,37 +48,37 @@ public class GlobalSpawnManager {
 	private static void updateConfigFile() {
 		// respawn point
 		if (globalRespawnPoint != null) {
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPointActive = true;
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnDimension = globalRespawnPoint.getDimension().getValue().toString();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPointActive = true;
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnDimension = globalRespawnPoint.getDimension().getValue().toString();
 			
 			BlockPos globalRespawnPointSpawnBlockPos = globalRespawnPoint.getPos();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPositionX = globalRespawnPointSpawnBlockPos.getX();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPositionY = globalRespawnPointSpawnBlockPos.getY();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPositionZ = globalRespawnPointSpawnBlockPos.getZ();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPositionSpread = globalRespawnPoint.getHorizontalSpread();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnCriterion = initialSpawnPoint.getCriterion().toString();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnAngle = globalRespawnPoint.getAngle();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPositionX = globalRespawnPointSpawnBlockPos.getX();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPositionY = globalRespawnPointSpawnBlockPos.getY();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPositionZ = globalRespawnPointSpawnBlockPos.getZ();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPositionSpread = globalRespawnPoint.getHorizontalSpread();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnCriterion = globalRespawnPoint.getCriterion().toString().toLowerCase(Locale.ROOT);
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnAngle = globalRespawnPoint.getAngle();
 		} else {
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.globalRespawnPointActive = false;
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.globalRespawnPointActive = false;
 		}
 		
 		// initial spawn point
 		if (initialSpawnPoint != null) {
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPointActive = true;
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPointDimension = initialSpawnPoint.getDimension().getValue().toString();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPointActive = true;
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPointDimension = initialSpawnPoint.getDimension().getValue().toString();
 			
 			BlockPos initialSpawnPointSpawnBlockPos = initialSpawnPoint.getPos();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPositionX = initialSpawnPointSpawnBlockPos.getX();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPositionY = initialSpawnPointSpawnBlockPos.getY();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPositionZ = initialSpawnPointSpawnBlockPos.getZ();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPositionSpread = initialSpawnPoint.getHorizontalSpread();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnCriterion = initialSpawnPoint.getCriterion().toString();
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnAngle = initialSpawnPoint.getAngle();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPositionX = initialSpawnPointSpawnBlockPos.getX();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPositionY = initialSpawnPointSpawnBlockPos.getY();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPositionZ = initialSpawnPointSpawnBlockPos.getZ();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPositionSpread = initialSpawnPoint.getHorizontalSpread();
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnCriterion = initialSpawnPoint.getCriterion().toString().toLowerCase(Locale.ROOT);
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnAngle = initialSpawnPoint.getAngle();
 		} else {
-			GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.initialSpawnPointActive = false;
+			GlobalSpawn.GLOBAL_SPAWN_CONFIG.initialSpawnPointActive = false;
 		}
-		
-		GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG_HOLDER.save();
+
+		GlobalSpawn.GLOBAL_SPAWN_CONFIG_HOLDER.save();
 	}
 	
 	// RESPAWN
@@ -102,7 +104,7 @@ public class GlobalSpawnManager {
 		if (existsWorld(server, globalRespawnPoint.getDimension())) {
 			return true;
 		} else {
-            GlobalSpawnCommon.LOGGER.warn("Respawn dimension {} is not loaded. GlobalRespawn is disabled", globalRespawnPoint.getDimension());
+			GlobalSpawn.LOGGER.warn("Respawn dimension {} is not loaded. GlobalRespawn is disabled", globalRespawnPoint.getDimension());
 			return false;
 		}
 	}
@@ -130,7 +132,7 @@ public class GlobalSpawnManager {
 		if (existsWorld(server, initialSpawnPoint.getDimension())) {
 			return true;
 		} else {
-            GlobalSpawnCommon.LOGGER.warn("Initial spawn dimension {} is not loaded. InitialSpawn is disabled", initialSpawnPoint.getDimension());
+			GlobalSpawn.LOGGER.warn("Initial spawn dimension {} is not loaded. InitialSpawn is disabled", initialSpawnPoint.getDimension());
 			return false;
 		}
 	}
