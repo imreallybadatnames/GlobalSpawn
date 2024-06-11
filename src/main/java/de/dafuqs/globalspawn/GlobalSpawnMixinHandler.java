@@ -5,6 +5,7 @@ import net.minecraft.server.*;
 import net.minecraft.server.network.*;
 import net.minecraft.stat.*;
 import net.minecraft.util.math.*;
+import org.jetbrains.annotations.*;
 
 public class GlobalSpawnMixinHandler {
 	
@@ -19,9 +20,9 @@ public class GlobalSpawnMixinHandler {
 	 */
 	public static NbtCompound modifySpawnRegistryPositionAndDimensionForNewPlayer(MinecraftServer server, NbtCompound nbtCompound) {
 		if (GlobalSpawnManager.isInitialSpawnPointActive(server)) {
-			return GlobalSpawnManager.getInitialSpawnPoint().getSpawnNbtCompound(nbtCompound);
+			return GlobalSpawnManager.getInitialSpawnPoint().getSpawnNbtCompound(server, nbtCompound);
 		} else if (GlobalSpawnManager.isGlobalSpawnPointActive(server)) {
-			return GlobalSpawnManager.getGlobalRespawnPoint().getSpawnNbtCompound(nbtCompound);
+			return GlobalSpawnManager.getGlobalRespawnPoint().getSpawnNbtCompound(server, nbtCompound);
 		}
 		return nbtCompound;
 	}
@@ -37,7 +38,7 @@ public class GlobalSpawnMixinHandler {
 	 */
 	public static NbtCompound modifySpawnRegistryPositionAndDimensionForExistingPlayer(MinecraftServer server, NbtCompound nbtCompound) {
 		if (GlobalSpawnManager.isGlobalSpawnPointActive(server)) {
-			return GlobalSpawnManager.getGlobalRespawnPoint().getSpawnNbtCompound(nbtCompound);
+			return GlobalSpawnManager.getGlobalRespawnPoint().getSpawnNbtCompound(server, nbtCompound);
 		} else {
 			return nbtCompound;
 		}
@@ -48,18 +49,25 @@ public class GlobalSpawnMixinHandler {
 	 * @param serverPlayerEntity The player
 	 */
 	public static boolean movePlayerToSpawn(ServerPlayerEntity serverPlayerEntity) {
+		@Nullable BlockPos spawnBlockPos = null;
+		float angle = 0.0F;
+
 		if (GlobalSpawnManager.isInitialSpawnPointActive(serverPlayerEntity.server) && isNewPlayer(serverPlayerEntity)) {
-			BlockPos spawnBlockPos = GlobalSpawnManager.getInitialSpawnPoint().getPos();
-			serverPlayerEntity.refreshPositionAndAngles(spawnBlockPos, 0.0F, 0.0F);
-			serverPlayerEntity.updatePosition(spawnBlockPos.getX() + 0.5F, spawnBlockPos.getY(), spawnBlockPos.getZ() + 0.5F);
-			return true;
+			spawnBlockPos = GlobalSpawnManager.getInitialSpawnPoint().getFinalSpawnPos(serverPlayerEntity.server);
+			angle = GlobalSpawnManager.getGlobalRespawnPoint().getAngle();
 		} else if (GlobalSpawnManager.isGlobalSpawnPointActive(serverPlayerEntity.server)) {
-			BlockPos spawnBlockPos = GlobalSpawnManager.getGlobalRespawnPoint().getPos();
-			serverPlayerEntity.refreshPositionAndAngles(spawnBlockPos, 0.0F, 0.0F);
-			serverPlayerEntity.updatePosition(spawnBlockPos.getX() + 0.5F, spawnBlockPos.getY(), spawnBlockPos.getZ() + 0.5F);
-			return true;
+			spawnBlockPos = GlobalSpawnManager.getGlobalRespawnPoint().getFinalSpawnPos(serverPlayerEntity.server);
+			angle = GlobalSpawnManager.getGlobalRespawnPoint().getAngle();
 		}
-		return false;
+
+		if (spawnBlockPos == null) {
+			return false;
+		}
+
+		serverPlayerEntity.refreshPositionAndAngles(spawnBlockPos, angle, 0.0F);
+		serverPlayerEntity.updatePosition(spawnBlockPos.getX() + 0.5F, spawnBlockPos.getY(), spawnBlockPos.getZ() + 0.5F);
+
+		return true;
 	}
 	
 	public static boolean isNewPlayer(ServerPlayerEntity serverPlayerEntity) {

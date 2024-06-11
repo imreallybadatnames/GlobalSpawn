@@ -3,12 +3,12 @@
   "commands.globalspawn.globalspawnpoint.query_set_at": "Doğma alanı şu koordinatlarda ayarlandı: %s at x:%d y:%d z:%d.",
   "commands.globalspawn.globalspawnpoint.query_not_set": "Genel Doğma alanı ayarlanmadı",
   "commands.globalspawn.globalspawnpoint.set_to": "Set global spawn in dimension %s at x:%d y:%d z:%d.",
-  "commands.globalspawn.globalspawnpoint.unset": "Genel Doğma ayarı kaldırıldı.",
+  "commands.globalspawn.globalspawnpoint.removed": "Genel Doğma ayarı kaldırıldı.",
 
   "commands.globalspawn.initialspawnpoint.query_set_at": "İlk doğma şu boyutta ayarlandı: %s at x:%d y:%d z:%d.",
   "commands.globalspawn.initialspawnpoint.query_not_set": "İlk doğma yeri ayarlanmadı.",
   "commands.globalspawn.initialspawnpoint.set_to": "İlk doğma yeri şu boyutta ayarlandı: %s at x:%d y:%d z:%d.",
-  "commands.globalspawn.initialspawnpoint.unset": "İlk doğma yeri kaldırıldı.",
+  "commands.globalspawn.initialspawnpoint.removed": "İlk doğma yeri kaldırıldı.",
 
   "text.autoconfig.GlobalSpawn.option.globalRespawnPointActive": "Genel yeniden doğma yeri aktif (Vanilla doğma yerinin üstüne yazılır)",
   "text.autoconfig.GlobalSpawn.option.globalRespawnDimension": "Yeniden doğma Boyutu",

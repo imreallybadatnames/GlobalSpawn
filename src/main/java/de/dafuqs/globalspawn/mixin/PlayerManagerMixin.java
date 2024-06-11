@@ -8,7 +8,7 @@ import net.minecraft.server.network.*;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 
-import java.util.Optional;
+import java.util.*;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {
@@ -27,7 +27,7 @@ public abstract class PlayerManagerMixin {
 		if (GlobalSpawnManager.isInitialSpawnPointActive(this.server) && GlobalSpawnMixinHandler.isNewPlayer(player)) {
 			nbt = GlobalSpawnMixinHandler.modifySpawnRegistryPositionAndDimensionForNewPlayer(this.server, nbt);
 			player.readNbt(nbt);
-		} else if (GlobalSpawnManager.isGlobalSpawnPointActive(this.server) && GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.alwaysSpawnAtGlobalSpawnOnJoin) {
+		} else if (GlobalSpawnManager.isGlobalSpawnPointActive(this.server) && GlobalSpawnCommon.GLOBAL_SPAWN_CONFIG.spawnAtGlobalSpawnOnEveryJoin) {
 			nbt = GlobalSpawnMixinHandler.modifySpawnRegistryPositionAndDimensionForExistingPlayer(this.server, nbt);
 			player.readNbt(nbt);
 		}
