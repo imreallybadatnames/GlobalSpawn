@@ -1,10 +1,9 @@
 {
-  "commands.globalspawn.globalspawnpoint.query_set_at": "Global spawn is set in dimension %s at x:%d y:%d z:%d with angle %d.",
+  "commands.globalspawn.globalspawnpoint.query_set_at": "Global spawn is set in dimension %s at x:%d y:%d z:%d with angle %d and criterion %s.",
   "commands.globalspawn.globalspawnpoint.query_not_set": "Global spawn is not set.",
   "commands.globalspawn.globalspawnpoint.set_to": "Set global spawn in dimension %s at x:%d y:%d z:%d with angle %d.",
   "commands.globalspawn.globalspawnpoint.removed": "Global spawn removed.",
-
-  "commands.globalspawn.initialspawnpoint.query_set_at": "Initial spawn is set in dimension %s at x:%d y:%d z:%d with angle %d.",
+  "commands.globalspawn.initialspawnpoint.query_set_at": "Initial spawn is set in dimension %s at x:%d y:%d z:%d with angle %d and criterion %s.",
   "commands.globalspawn.initialspawnpoint.query_not_set": "Initial spawn is not set.",
   "commands.globalspawn.initialspawnpoint.set_to": "Set initial spawn in dimension %s at x:%d y:%d z:%d with angle %d.",
   "commands.globalspawn.initialspawnpoint.removed": "Initial spawn removed.",

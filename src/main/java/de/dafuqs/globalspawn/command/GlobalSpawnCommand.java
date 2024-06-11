@@ -52,8 +52,9 @@ public class GlobalSpawnCommand {
 			BlockPos spawnBlockPos = globalSpawnPoint.getPos();
 			RegistryKey<World> spawnWorld = globalSpawnPoint.getDimension();
 			float angle = globalSpawnPoint.getAngle();
+			GlobalSpawnPoint.SpawnCriterion criterion = globalSpawnPoint.getCriterion();
 
-			source.sendFeedback(() -> Text.translatable("commands.globalspawn.globalspawnpoint.query_set_at", spawnWorld.getValue().toString(), spawnBlockPos.getX(), spawnBlockPos.getY(), spawnBlockPos.getZ(), angle), false);
+			source.sendFeedback(() -> Text.translatable("commands.globalspawn.globalspawnpoint.query_set_at", spawnWorld.getValue().toString(), spawnBlockPos.getX(), spawnBlockPos.getY(), spawnBlockPos.getZ(), angle, criterion), false);
 		}
 		return 1;
 	}
