@@ -11,6 +11,8 @@ import net.minecraft.text.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 
+import java.util.*;
+
 public class InitialSpawnCommand {
 
 	public static void register() {
@@ -26,20 +28,20 @@ public class InitialSpawnCommand {
 								context.getSource(),
 								context.getSource().getWorld(),
 								BlockPos.ofFloored(context.getSource().getPosition()),
-								0,
 								GlobalSpawnPoint.SpawnCriterion.SAFE_SKY_ACCESS_NOT_REQUIRED,
+								0,
 								0))
 						.then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
 								.then(CommandManager.argument("position", BlockPosArgumentType.blockPos())
-										.then(CommandManager.argument("spread", IntegerArgumentType.integer())
-												.then(CommandManager.argument("criterion", SpawnCriterionArgumentType.criterion())
+										.then(CommandManager.argument("criterion", SpawnCriterionArgumentType.criterion())
+												.then(CommandManager.argument("spread", IntegerArgumentType.integer())
 														.then(CommandManager.argument("angle", AngleArgumentType.angle())
 																.executes((context) -> InitialSpawnCommand.executeSet(
 																		context.getSource(),
 																		DimensionArgumentType.getDimensionArgument(context, "dimension"),
 																		BlockPosArgumentType.getBlockPos(context, "position"),
-																		IntegerArgumentType.getInteger(context, "spread"),
 																		SpawnCriterionArgumentType.getCriterion(context, "criterion"),
+																		IntegerArgumentType.getInteger(context, "spread"),
 																		AngleArgumentType.getAngle(context, "angle"))
 																)))))))));
 	}
@@ -54,12 +56,12 @@ public class InitialSpawnCommand {
 			float angle = initialSpawnPoint.getAngle();
 			GlobalSpawnPoint.SpawnCriterion criterion = initialSpawnPoint.getCriterion();
 
-			source.sendFeedback(() -> Text.translatable("commands.globalspawn.initialspawnpoint.query_set_at", spawnWorld.getValue().toString(), spawnBlockPos.getX(), spawnBlockPos.getY(), spawnBlockPos.getZ(), angle, criterion), false);
+			source.sendFeedback(() -> Text.translatable("commands.globalspawn.initialspawnpoint.query_set_at", spawnWorld.getValue().toString(), spawnBlockPos.getX(), spawnBlockPos.getY(), spawnBlockPos.getZ(), angle, criterion.toString().toLowerCase(Locale.ROOT)), false);
 		}
 		return 1;
 	}
 
-	static int executeSet(ServerCommandSource source, ServerWorld serverWorld, BlockPos blockPos, int spread, GlobalSpawnPoint.SpawnCriterion criterion, float angle) {
+	static int executeSet(ServerCommandSource source, ServerWorld serverWorld, BlockPos blockPos, GlobalSpawnPoint.SpawnCriterion criterion, int spread, float angle) {
 		GlobalSpawnPoint initialSpawnPoint = new GlobalSpawnPoint(serverWorld.getRegistryKey(), blockPos, spread, criterion, angle);
 		GlobalSpawnManager.setInitialSpawnPoint(initialSpawnPoint);
 		source.sendFeedback(() -> Text.translatable("commands.globalspawn.initialspawnpoint.set_to", serverWorld.getRegistryKey().getValue().toString(), blockPos.getX(), blockPos.getY(), blockPos.getZ(), angle), true);
