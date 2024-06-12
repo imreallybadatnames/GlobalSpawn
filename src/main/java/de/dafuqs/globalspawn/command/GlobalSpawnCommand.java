@@ -28,7 +28,7 @@ public class GlobalSpawnCommand {
 								context.getSource(),
 								context.getSource().getWorld(),
 								BlockPos.ofFloored(context.getSource().getPosition()),
-								GlobalSpawnPoint.SpawnCriterion.SAFE_SKY_ACCESS_NOT_REQUIRED,
+								GlobalSpawnPoint.SpawnCriterion.UNOBSTRUCTED_Y,
 								0,
 								0))
 						.then(CommandManager.argument("dimension", DimensionArgumentType.dimension())

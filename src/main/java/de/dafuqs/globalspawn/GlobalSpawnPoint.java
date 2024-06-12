@@ -21,7 +21,7 @@ public class GlobalSpawnPoint {
 
 	public enum SpawnCriterion {
 		SAFE_WITH_SKY_ACCESS,
-		SAFE_SKY_ACCESS_NOT_REQUIRED,
+		UNOBSTRUCTED_Y,
 		EXACT
 	}
 
@@ -93,7 +93,7 @@ public class GlobalSpawnPoint {
 			case SAFE_WITH_SKY_ACCESS -> {
 				return SpawnLocating.findServerSpawnPoint(world, new ChunkPos(pos));
 			}
-			case SAFE_SKY_ACCESS_NOT_REQUIRED -> {
+			case UNOBSTRUCTED_Y -> {
 				return findSpawn(world, pos);
 			}
 			case EXACT -> {
